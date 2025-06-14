@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: newman-svc
+spec:
+  selector:
+    app: newman
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080             # 對外暴露的 port（外部訪問用）
+      targetPort: 8080     # 容器內 Spring Boot 應用監聽的 port
+  type: ClusterIP  # or ClusterIP if no external access is needed

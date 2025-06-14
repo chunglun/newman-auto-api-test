@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: newman-config
+data:
+  application.properties: |
+    server.port=8080
+    upload.folder=/tmp/uploads
+    report.folder=/tmp/reports
+    spring.thymeleaf.prefix=classpath:/templates/
+    spring.resources.static-locations=classpath:/static/,file:/tmp/

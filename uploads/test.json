@@ -1,0 +1,67 @@
+{
+	"info": {
+		"_postman_id": "208c72d2-3158-4284-a62f-bd3e16a4c259",
+		"name": "Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2962115"
+	},
+	"item": [
+		{
+			"name": "Test1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body is not empty\", function () {",
+							"    const responseBody = pm.response.text();",
+							"    pm.expect(responseBody).to.not.be.empty;",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response body contains the expected HTML structure\", function () {",
+							"    const responseBody = pm.response.text();",
+							"    ",
+							"    pm.expect(responseBody).to.include(\"<html\");",
+							"    pm.expect(responseBody).to.include(\"<head\");",
+							"    pm.expect(responseBody).to.include(\"<body\");",
+							"    pm.expect(responseBody).to.include(\"</html>\");",
+							"    pm.expect(responseBody).to.include(\"</head>\");",
+							"    pm.expect(responseBody).to.include(\"</body>\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "www.google.com/",
+					"host": [
+						"www",
+						"google",
+						"com"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

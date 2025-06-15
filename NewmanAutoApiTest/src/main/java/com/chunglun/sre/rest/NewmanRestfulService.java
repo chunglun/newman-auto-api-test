@@ -31,31 +31,45 @@ public class NewmanRestfulService {
     @Value("${report.folder}")
     private String reportFolder;
     @PostMapping("/executeTest")
-    public ResponseEntity<?> executeTest(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
+    public ResponseEntity<?> executeTest(@RequestParam("collection") MultipartFile collectionFile,
+                                         @RequestParam(value = "environment", required = false) MultipartFile environmentFile) {
+        if (collectionFile.isEmpty()) {
             return ResponseEntity.badRequest().body(Map.of("error", "Please select a file to upload"));
         }
 
         String uid = UUID.randomUUID().toString();
-        String filename = uid + ".json";
+        String collectionFilename = uid + ".json";
+        String environmentFilename = uid + "-env.json";
 
         try {
             File uploadPath = new File(uploadFolder);
             if (!uploadPath.exists()) {
                 uploadPath.mkdirs();
             }
-            File jsonFile = new File(uploadPath, filename);
-            file.transferTo(jsonFile);
-
+            // Save collection file
+            File jsonFile = new File(uploadPath, collectionFilename);
+            collectionFile.transferTo(jsonFile);
+            // Optional: Save environment file
+            File envFile = null;
+            if (environmentFile != null && !environmentFile.isEmpty()) {
+                envFile = new File(uploadPath, environmentFilename);
+                environmentFile.transferTo(envFile);
+            }
+            // Prepare report file
             String reportFilename = uid + ".html";
             File reportPath = new File(reportFolder);
             if (!reportPath.exists()) {
                 reportPath.mkdirs();
             }
             File reportFile = new File(reportPath, reportFilename);
-
-            ProcessBuilder pb = new ProcessBuilder("newman", "run", jsonFile.getAbsolutePath(),
+            // Build Newman command
+            ProcessBuilder pb = new ProcessBuilder(
+                    "newman", "run", jsonFile.getAbsolutePath(),
                     "--reporters", "html", "--reporter-html-export", reportFile.getAbsolutePath());
+            if (envFile != null) {
+                pb.command().add("--environment");
+                pb.command().add(envFile.getAbsolutePath());
+            }
             Process process = pb.start();
             int exitCode = process.waitFor();
 

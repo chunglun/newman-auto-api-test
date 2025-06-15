@@ -1,13 +1,16 @@
 # 🧪 Newman RESTful API Runner
 A lightweight Spring Boot API that accepts a Postman collection (JSON file), executes it using [Newman](https://www.npmjs.com/package/newman), and generates an HTML report that can be retrieved via a REST endpoint.
 
-- Author: Chung-Lun LU
-- Date: June 15, 2025
+[![Docker Image](https://img.shields.io/docker/pulls/chunglunlu/newman-api-test.svg)](https://hub.docker.com/r/chunglunlu/newman-api-test)
+
+- **Author:** Chung-Lun LU
+- **Date:** June 15, 2025
 
 ## 🚀 Features
 - 📥 Accepts `POST` requests with a Postman collection `.json` file.
 - ⚙️ Executes tests via Newman (Postman's CLI).
 - 📊 Generates HTML reports with `newman-reporter-html`.
+- 🧩 Supports optional Postman `environment.json` file.
 - 🌐 Serves reports via REST endpoint - provides a `GET` API to view/download the report.
 - 🐳 Dockerized for deployment with Node.js and Java 17.
 - 
@@ -19,13 +22,23 @@ Upload a Postman collection JSON file and trigger test execution.
 
 #### Request
 - Content-Type: `multipart/form-data`
-- Field: `file` — Postman collection file (`.json`)
+- Required Field:
+    - `collection` — Postman collection file (`.json`)
+- Optional Field:
+    - `environment` — Postman environment file (`.json`)
 
-#### Example with `curl`
+#### 🧪 Example with `curl` (Collection Only)
 ```bash
 curl -X POST http://localhost:8080/v1/api/executeTest \
   -H "Content-Type: multipart/form-data" \
-  -F "file=@/path/to/collection.json"
+  -F "collection=@/path/to/collection.json"
+```
+#### 🧪 Example with `curl` (Collection + Environment)
+```bash
+curl -X POST http://localhost:8080/v1/api/executeTest \
+  -H "Content-Type: multipart/form-data" \
+  -F "collection=@/path/to/collection.json" \
+  -F "environment=@/path/to/environment.json"
 ```
 
 #### Response
@@ -41,8 +54,10 @@ Retrieve the generated HTML report.
 ```bash
 GET http://localhost:8080/v1/api/report/abcd1234.html
 ```
-- If successful, return an HTML file as inline content.
-- If not found or not .html, return appropriate status code.
+✅ Returns HTML file as inline content.
+
+❌ Returns 404 if not found or 403 if file extension is invalid.
+
 
 ## 🐳 Docker Support
 
@@ -58,11 +73,18 @@ docker build -t chunglunlu/newman-api-test:0.0.3 .
 ## ⚙️ Configuration (application.properties)
 ```properties
 server.port=8080
+# File Storage
 upload.folder=/tmp/uploads
 report.folder=/tmp/reports
+# Serve static resources (reports)
 spring.resources.static-locations=classpath:/static/,file:/tmp/
 ```
-Note: You can override these with -e flags in Docker or using environment-specific config.
+💡 You can override these with -e flags in Docker or provide a custom application.properties.
+### 📎 Example Project Structure (Volume)
+```
+/tmp/uploads/    ← Collection + environment JSONs
+/tmp/reports/    ← Generated HTML reports
+```
 
 ## Kubernetes deploy
 ```bash
@@ -102,7 +124,7 @@ Dockerfile
 README.md
 ```
 ## 📄 Sample
-![img.png](execuet.png)
-![img_1.png](getReport.png)
+![img.png](execute.png)
+![img.png](getReport.png)
 ## 👨‍💻️ Author
 Developed by Chung-Lun Lu

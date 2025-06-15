@@ -4,6 +4,7 @@ A lightweight Spring Boot API that accepts a Postman collection (JSON file), exe
 [![Docker Image](https://img.shields.io/docker/pulls/chunglunlu/newman-api-test.svg)](https://hub.docker.com/r/chunglunlu/newman-api-test)
 
 - **Author:** Chung-Lun LU
+- **Version:** `0.0.3`
 - **Date:** June 15, 2025
 
 ## 🚀 Features

@@ -48,11 +48,11 @@ GET http://localhost:8080/v1/api/report/abcd1234.html
 
 ### 🔧 Build Docker Image
 ```bash
-docker build -t chunglunlu/newman-api-test:0.0.2 .
+docker build -t chunglunlu/newman-api-test:0.0.3 .
 ```
 ### ▶️ Run Docker Container
 ```bash
-  docker run -p 8080:8080 chunglunlu/newman-api-test:0.0.2
+  docker run -p 8080:8080 chunglunlu/newman-api-test:0.0.3
 ```
 
 ## ⚙️ Configuration (application.properties)

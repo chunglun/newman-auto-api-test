@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: newman-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: newman
+  template:
+    metadata:
+      labels:
+        app: newman
+    spec:
+      containers:
+        - name: newman
+          image: chunglunlu/newman-api-test:0.0.3
+          command: ["java"]
+          args:
+            - "-jar"
+            - "app.jar"
+            - "--spring.config.location=file:/config/application.properties"
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+              readOnly: true
+            - name: uploads
+              mountPath: /tmp/uploads
+            - name: reports
+              mountPath: /tmp/reports
+      volumes:
+        - name: config-volume
+          configMap:
+            name: newman-config
+        - name: uploads
+          emptyDir: { }
+        - name: reports
+          emptyDir: { }

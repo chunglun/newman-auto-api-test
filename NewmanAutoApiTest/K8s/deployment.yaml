@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: newman
-          image: chunglunlu/newman-api-test:0.0.1
+          image: chunglunlu/newman-api-test:0.0.2
           command: ["java"]
           args:
             - "-jar"

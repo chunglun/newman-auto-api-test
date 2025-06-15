@@ -8,7 +8,6 @@ RUN apt-get update && apt-get install -y curl gnupg && \
 
 WORKDIR /app
 COPY target/*.jar app.jar
-COPY src/main/resources/templates /app/src/main/resources/templates
 
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
